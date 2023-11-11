@@ -11,13 +11,22 @@ POST /api/register
 }
 
 On Success
+Status 200
 {
-    "message": "OK"
+    "message": "OK",
+    "data" : {
+        "username": string
+    }
 }
 
 On Error 
+Status 400
 {
-    "message": "Error registering user"
+    "message": "Error User already exists"
+}
+Status 500
+{
+    "message": "Error while registering user"
 }
 ```
 
@@ -35,7 +44,13 @@ On Success
 }
 
 On Error 
+Status 400
 {
-    "message": "Error logging in user"
+    "message": "User does not exist, or username or password is incorrect"
+}
+
+Status 500
+{
+    "message": "Error while logging in user"
 }
 ```
