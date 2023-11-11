@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/washedPat/madhacksfall2023-backend#readme",
   "devDependencies": {
+    "@flydotio/dockerfile": "^0.4.10",
     "@types/express": "^4.17.21",
     "typescript": "^5.2.2"
   },
