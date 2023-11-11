@@ -27,10 +27,5 @@ export async function connectToDatabase (dbConnString: string) {
 
 }
 
-let connection=connectToDatabase(dbConnString!);
-
-
-console.log("connection achieved", connection);
-
 
 //client
