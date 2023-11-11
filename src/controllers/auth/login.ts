@@ -39,7 +39,7 @@ async function loginController(req: Request, res: Response) {
 		})
 	} catch {
 		return res.status(500).json({
-			"message": "Error occurred while registering user"
+			"message": "Error occurred while logging in user"
 		})
 	}
 }
