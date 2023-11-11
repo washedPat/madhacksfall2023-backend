@@ -2,6 +2,7 @@
 
 ## Authentication 
 
+Register
 ```
 POST /api/register
 {
@@ -18,7 +19,10 @@ On Error
 {
     "message": "Error registering user"
 }
+```
 
+Login
+```
 POST /api/login
 {
     "username": string,
