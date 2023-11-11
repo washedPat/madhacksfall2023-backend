@@ -1,7 +1,9 @@
 import express from "express";
 import { router } from "./routes";
+import { connectToDatabase } from "./models/connect";
 
-const app = express();
+async function main() {
+	const app = express();
 
 const port = 8080;
 
