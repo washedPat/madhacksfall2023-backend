@@ -144,7 +144,7 @@ async function queryListingsController(req: Request, res: Response) {
 
 		let results: Listing[] = [];
 		for await (const doc of cursor) {
-			let eucld_dist=euclideanDistance(cords.lat, cords.lng, doc.location.lat!, doc.location.long!);
+			let eucld_dist=euclideanDistance(cords.lat, cords.lng, doc.location?.lat!, doc.location?.long!);
 			if(eucld_dist<=body.distance && body.spotType==doc.parkingSize){
 				results.push(doc)
 			}
