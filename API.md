@@ -97,7 +97,9 @@ POST /api/queryListing
     "maxPrice": 20,
     "city": string,
     "address": string,
-    "distance": number
+    "distance": number,
+	"startDate": string,
+	"endDate": string,
     "spotType": "Tight" | "Normal" | "Wide"
 }
 
