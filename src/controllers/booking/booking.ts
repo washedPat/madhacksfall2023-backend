@@ -32,7 +32,7 @@ const BookListingBody = z.object({
 	listingID: z.string()
 });
 type BookListingBody = z.infer<typeof BookListingBody>;
-async function bookListing(req: Request, res: Response) {
+async function bookListingController(req: Request, res: Response) {
 	try {
 		const body = BookListingBody.parse(req.body);
 		const client = await connectToDatabase(process.env.DB_CONN_STRING as string);
@@ -97,4 +97,42 @@ async function getUserBookingsController(req: Request, res: Response) {
 		});
 	}
 }
-export { getUserListingsController, bookListing, getUserBookingsController };
+
+const RemoveUserBookingBody = z.object({
+	bookingID: z.string()
+})
+type RemoveUserBookingBody = z.infer<typeof RemoveUserBookingBody>;
+async function removeBookingController(req: Request, res: Response) {
+	try {
+		const client = await connectToDatabase(process.env.DB_CONN_STRING as string);
+		const database = client.db(process.env.DB_NAME);
+
+		const listings = database.collection<Listing>("Listings");
+
+		const body = RemoveUserBookingBody.parse(req.body);
+
+		const result = await listings.findOneAndUpdate({
+			id: body.bookingID
+		},
+		{
+			"$set": {
+				booked: false,
+				bookedBy: ""
+			}
+		});
+		if (!result) {
+			res.status(400).json({
+				"message": "Could not remove booking because booking could not be found"
+			});
+		}
+
+		return res.status(200).json({
+			"message": "OK"
+		});
+	}catch(e) {
+		return res.status(500).json({
+			"message": "Error while removing a users booking"
+		});
+	}
+}
+export { getUserListingsController, bookListingController, getUserBookingsController, removeBookingController };
