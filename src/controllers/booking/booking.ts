@@ -8,7 +8,7 @@ const GetUserListingsBody = z.object({
 });
 type GetUserListingsBody = z.infer<typeof GetUserListingsBody>;
 
-async function getUserListingsController(req: Request, res: Response){
+async function getUserListingsController(req: Request, res: Response) {
 	const body = GetUserListingsBody.parse(req.query);
 	const client = await connectToDatabase(process.env.DB_CONN_STRING as string);
 	const database = client.db(process.env.DB_NAME);
@@ -27,4 +27,45 @@ async function getUserListingsController(req: Request, res: Response){
 	return res.status(200).json(results);
 }
 
-export { getUserListingsController };
+const BookListingBody = z.object({
+	username: z.string(),
+	listingID: z.string()
+});
+type BookListingBody = z.infer<typeof BookListingBody>;
+async function bookListing(req: Request, res: Response) {
+	try {
+		const body = BookListingBody.parse(req.body);
+		const client = await connectToDatabase(process.env.DB_CONN_STRING as string);
+		const database = client.db(process.env.DB_NAME);
+
+		const listings = database.collection<Listing>("Listings");
+
+		const result = await listings.findOneAndUpdate({
+			"id": body.listingID
+		},
+			{
+				"$set": {
+					"booked": true,
+					"bookedBy": body.username
+				}
+			})
+		if (!result) {
+			res.status(400).json({
+				"message": "Could not book listing because listing could not be found"
+			});
+		}
+
+		return res.status(200).json({
+			"message": "OK"
+		});
+
+	} catch (e) {
+		console.log(e);
+		return res.status(500).json({
+			"message": "Error could book listing due to an error",
+			"error": e
+		});
+	}
+}
+
+export { getUserListingsController, bookListing };
