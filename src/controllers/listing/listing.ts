@@ -4,6 +4,7 @@ import { Listing } from "../../models/listing";
 import { v4 as uuid } from "uuid"
 import axios from 'axios';
 import { z } from "zod";
+import { euclideanDistance } from "./distance";
 
 
 
@@ -93,6 +94,7 @@ async function createListingController(req: Request, res: Response) {
 		}
 		body.location = location;
 		body.id = uuid();
+		body.booked = false;
 
 		await listings.insertOne(body);
 
@@ -134,7 +136,9 @@ async function queryListingsController(req: Request, res: Response) {
 		const cursor = listings.find({
 			"price": {
 				$lt: body.maxPrice,
-			}
+			},
+			"booked": false,
+			"parkingSize": body.spotType
 		});
 
 		const user_addy = body.address + ", " + body.city
@@ -153,6 +157,7 @@ async function queryListingsController(req: Request, res: Response) {
 
 			res.status(200).json(results);
 		}
+		return res.status(200).json([]);
 	} catch (e) {
 		console.log(e);
 		return res.status(500).json({
