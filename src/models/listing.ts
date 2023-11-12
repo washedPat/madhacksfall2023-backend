@@ -1,0 +1,82 @@
+import { z } from "zod";
+
+const Listing = z.object({
+    id: z.string().optional(),
+    parkingSize: z.union([
+        z.literal("Tight"),
+        z.literal("Normal"),
+        z.literal("Wide"),
+    ]),
+    price: z.number(),
+    description: z.string().max(250),
+    photoURL: z.string().url(),
+    startDate: z.string().datetime(),
+    endDate: z.string().datetime(),
+    location: z.object({
+        lat: z.number(),
+        long: z.number()
+    }),
+    address: z.object({
+        street: z.string(),
+        city: z.string(),
+        state: z.union([
+            z.literal("AL"),
+            z.literal("AK"),
+            z.literal("AZ"),
+            z.literal("AR"),
+            z.literal("CA"),
+            z.literal("CO"),
+            z.literal("CT"),
+            z.literal("DE"),
+            z.literal("DC"),
+            z.literal("FL"),
+            z.literal("GA"),
+            z.literal("HI"),
+            z.literal("ID"),
+            z.literal("IL"),
+            z.literal("IN"),
+            z.literal("IA"),
+            z.literal("KS"),
+            z.literal("KY"),
+            z.literal("LA"),
+            z.literal("ME"),
+            z.literal("MD"),
+            z.literal("MA"),
+            z.literal("MI"),
+            z.literal("MN"),
+            z.literal("MS"),
+            z.literal("MO"),
+            z.literal("MT"),
+            z.literal("NE"),
+            z.literal("NV"),
+            z.literal("NH"),
+            z.literal("NJ"),
+            z.literal("NM"),
+            z.literal("NY"),
+            z.literal("NC"),
+            z.literal("ND"),
+            z.literal("OH"),
+            z.literal("OK"),
+            z.literal("OR"),
+            z.literal("PA"),
+            z.literal("RI"),
+            z.literal("SC"),
+            z.literal("SD"),
+            z.literal("TN"),
+            z.literal("TX"),
+            z.literal("UT"),
+            z.literal("VT"),
+            z.literal("VA"),
+            z.literal("WA"),
+            z.literal("WV"),
+            z.literal("WI"),
+            z.literal("WY"),
+        ]),
+        country: z.string(),
+        zip: z.number()
+    })
+});
+
+type Listing = z.infer<typeof Listing>
+
+export { Listing };
