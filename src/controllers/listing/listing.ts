@@ -181,4 +181,38 @@ async function queryListingsController(req: Request, res: Response) {
 	}
 }
 
-export { createListingController, queryListingsController };
+const RemoveListingBody = z.object({
+	listingID: z.string()
+})
+type RemoveListingBody = z.infer<typeof RemoveListingBody>; 
+async function removeListingController(req: Request, res: Response){
+	try{
+		const client = await connectToDatabase(process.env.DB_CONN_STRING as string);
+		const database = client.db(process.env.DB_NAME);
+
+		const listings = database.collection<Listing>("Listings");
+
+		const body = RemoveListingBody.parse(req.body);
+
+		const result = listings.deleteOne({
+			id: body.listingID
+		})
+
+		if(!result) {
+			return res.status(400).json({
+				"message": "Could not find listing to remove"
+			})
+		}
+
+		return res.status(200).json({
+			"message": "OK"
+		})
+	}catch(e) {
+		return res.status(500).json({
+			"message": "Error while removing listing",
+			"error": e
+		})
+	}
+}
+
+export { createListingController, queryListingsController, removeListingController };
