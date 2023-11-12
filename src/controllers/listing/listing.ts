@@ -35,10 +35,10 @@ const QueryFields = z.object({
 	address: z.string(),
 	distance: z.number().positive(),
 	spotType: z.union([
-        z.literal("Tight"),
-        z.literal("Normal"),
-        z.literal("Wide"),
-    ])
+		z.literal("Tight"),
+		z.literal("Normal"),
+		z.literal("Wide"),
+        ])
 });
 
 type QueryFields = z.infer<typeof QueryFields>;
