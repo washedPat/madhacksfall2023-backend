@@ -63,7 +63,8 @@ async function createListingController(req: Request, res: Response){
 		return res.status(200).json({
 			"message": "OK"
 		})
-	} catch {
+	} catch(e) {
+		console.log(e);
 		res.status(500).json({
 			"message": "Error while creating listing"
 		})
@@ -71,12 +72,15 @@ async function createListingController(req: Request, res: Response){
 }
 
 const QueryFields = z.object({
-	maxPrice: z.number().positive(), //we have a range
-	minPrice: z.number().positive()
-	//distance: we have a range
-	//EV bool
-	//city
-	//street address
+	maxPrice: z.number().positive(),
+	city: z.string(),
+	address: z.string(),
+	distance: z.number().positive(),
+	spotType: z.union([
+        z.literal("Tight"),
+        z.literal("Normal"),
+        z.literal("Wide"),
+    ])
 });
 
 type QueryFields = z.infer<typeof QueryFields>;
@@ -93,19 +97,17 @@ async function queryListingsController(req: Request, res: Response) {
 		const cursor = listings.find({
 			"price": {
 				$lt: body.maxPrice,
-				$gt: body.minPrice
 			}
 		});
 
 		let results: Listing[] = [];
 		for await (const doc of cursor) {
-			
-			console.log(doc);
 			results.push(doc)
 		}
 
 		res.status(200).json(results);
-	}catch {
+	}catch(e) {
+		console.log(e);
 		return res.status(500).json({
 			"message": "Error while querying listings"
 		});
