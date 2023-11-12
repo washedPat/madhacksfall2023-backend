@@ -6,7 +6,19 @@ import axios from 'axios';
 import { z } from "zod";
 import { euclideanDistance } from "./distance";
 
+async function time_check(
+    time_string_1_start: string,
+    time_string_1_end: string,
+    time_string_2_start: string,
+    time_string_2_end: string
+){
+    const start_1 = Date.parse(time_string_1_start);
+    const end_1 = Date.parse(time_string_1_end);
+    const start_2 = Date.parse(time_string_2_start);
+    const end_2 = Date.parse(time_string_2_end);
 
+    return start_1 >= start_2 && end_1 <= end_2;
+}
 
 async function geocodeAddress(address: string): Promise<{ lat: number; lng: number } | null> {
 	const url = 'https://maps.googleapis.com/maps/api/geocode/json';
@@ -115,6 +127,8 @@ const QueryFields = z.object({
 	city: z.string(),
 	address: z.string(),
 	distance: z.number().positive(),
+	startDate: z.string(),
+	endDate: z.string(),
 	spotType: z.union([
 		z.literal("Tight"),
 		z.literal("Normal"),
@@ -150,7 +164,8 @@ async function queryListingsController(req: Request, res: Response) {
 			let results: Listing[] = [];
 			for await (const doc of cursor) {
 				let eucld_dist = euclideanDistance(cords.lat, cords.lng, doc.location?.lat!, doc.location?.long!);
-				if (eucld_dist <= body.distance && body.spotType == doc.parkingSize) {
+				let time_verif= await time_check(body.startDate, body.endDate, doc.startDate, doc.endDate);
+				if (eucld_dist <= body.distance && body.spotType == doc.parkingSize && time_verif==true) {
 					results.push(doc)
 				}
 			}
