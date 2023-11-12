@@ -6,6 +6,7 @@ import axios from 'axios';
 import { z } from "zod";
 
 
+
 async function geocodeAddress(address: string): Promise<{ lat: number; lng: number } | null> {
     const url = 'https://maps.googleapis.com/maps/api/geocode/json';
 
@@ -74,8 +75,6 @@ async function getLatLng(listing: Listing): Promise<{lat: number, long: number} 
 	}
   }
 
-
-
 async function createListingController(req: Request, res: Response){
 	try {
 		const client = await connectToDatabase(process.env.DB_CONN_STRING as string);
@@ -102,7 +101,8 @@ async function createListingController(req: Request, res: Response){
 	} catch(e) {
 		console.log(e);
 		res.status(500).json({
-			"message": "Error while creating listing"
+			"message": "Error while creating listing",
+			"error": e
 		})
 	}
 }
@@ -113,10 +113,10 @@ const QueryFields = z.object({
 	address: z.string(),
 	distance: z.number().positive(),
 	spotType: z.union([
-        z.literal("Tight"),
-        z.literal("Normal"),
-        z.literal("Wide"),
-    ])
+		z.literal("Tight"),
+		z.literal("Normal"),
+		z.literal("Wide"),
+        ])
 });
 
 type QueryFields = z.infer<typeof QueryFields>;

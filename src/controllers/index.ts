@@ -3,7 +3,7 @@ import { loginController } from "../controllers/auth/login";
 import { Request, Response } from "express";
 import { createListingController, queryListingsController } from "./listing/listing";
 
-function indexController(req: Request, res: Response){
+function indexController(req: Request, res: Response) {
 	return res.send("hello");
 }
 
