@@ -58,7 +58,8 @@ async function queryListingsController(req: Request, res: Response) {
 		}
 
 		res.status(200).json(results);
-	}catch {
+	}catch(e) {
+		console.log(e);
 		return res.status(500).json({
 			"message": "Error while querying listings"
 		});
