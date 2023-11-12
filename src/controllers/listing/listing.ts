@@ -155,7 +155,7 @@ async function queryListingsController(req: Request, res: Response) {
 				}
 			}
 
-			res.status(200).json(results);
+			return res.status(200).json(results);
 		}
 		return res.status(200).json([]);
 	} catch (e) {
