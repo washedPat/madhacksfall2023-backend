@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
 import { connectToDatabase } from "../../models/connect";
 import { Listing } from "../../models/listing";
-
 import {v4 as uuid}  from "uuid"
+import { z } from "zod";
+
 
 async function createListingController(req: Request, res: Response){
 	try {
@@ -27,4 +28,37 @@ async function createListingController(req: Request, res: Response){
 	}
 }
 
-export { createListingController };
+const QueryFields = z.object({
+	maxPrice: z.number().positive(),
+	minPrice: z.number().positive()
+});
+
+type QueryFields = z.infer<typeof QueryFields>;
+
+async function queryListingsController(req: Request, res: Response) {
+	try {
+		const client = await connectToDatabase(process.env.DB_CONN_STRING as string);
+		const database = client.db(process.env.DB_NAME);
+
+		const listings = database.collection<Listing>("Listings");
+
+		const body = QueryFields.parse(req.body);
+
+		const cursor = listings.find({
+			"price": {
+				$lt: body.maxPrice,
+				$gt: body.minPrice
+			}
+		});
+
+		let results: Listing[] = [];
+		for await (const doc of cursor) {
+			console.log(doc);
+			results.push(doc)
+		}
+
+		res.status(200).json(results);
+	}
+}
+
+export { createListingController, queryListingsController };
