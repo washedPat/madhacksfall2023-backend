@@ -68,4 +68,33 @@ async function bookListing(req: Request, res: Response) {
 	}
 }
 
-export { getUserListingsController, bookListing };
+const GetUserBookingsParams = z.object({
+	username: z.string()
+})
+type GetUserBookingsParams = z.infer<typeof GetUserBookingsParams>;
+async function getUserBookingsController(req: Request, res: Response) {
+	try {
+		const body = GetUserBookingsParams.parse(req.query);
+		const client = await connectToDatabase(process.env.DB_CONN_STRING as string);
+		const database = client.db(process.env.DB_NAME);
+
+		const listings = database.collection<Listing>("Listings");
+
+		const cursor = listings.find({
+			bookedBy: body.username
+		});
+
+		let results: Listing[] = [];
+		for await (const doc of cursor) {
+			results.push(doc);
+		}
+
+		return res.status(200).json(results);
+	} catch(e) {
+		return res.status(500).json({
+			"message": "Error while retrieving user bookings",
+			"error": e
+		});
+	}
+}
+export { getUserListingsController, bookListing, getUserBookingsController };
