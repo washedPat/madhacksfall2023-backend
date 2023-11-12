@@ -23,7 +23,8 @@ async function createListingController(req: Request, res: Response){
 	} catch(e) {
 		console.log(e);
 		res.status(500).json({
-			"message": "Error while creating listing"
+			"message": "Error while creating listing",
+			"error": e
 		})
 	}
 }

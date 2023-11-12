@@ -61,16 +61,13 @@ Create Listing
 ```
 POST /api/createListing
 {
-    "parkingSize": "Wide",
+    "parkingSize": "Tight",
     "price": 15,
-    "description": "a tight spot",
+    "title": "a very very tight spot",
+    "description": "a very tight spot",
     "photoURL": "https://uploads-ssl.webflow.com/5fb87a8aff41decc058676e1/605d4cedcfa34d1f5f3dfea1_Extra-Wide%20Parking%20Stall.jpg",
     "startDate": "2023-11-11T23:32:57.718Z",
     "endDate": "2023-11-11T23:32:57.718Z",
-    "location": {
-        "lat": 43.073929,
-        "long": -89.385239
-    },
     "address": {
         "street": "1001 University Ave.",
         "city": "Madison",
