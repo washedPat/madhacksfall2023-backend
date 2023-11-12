@@ -9,6 +9,6 @@ router.post("/api/register", registerController);
 router.post("/api/login", loginController);
 
 router.post("/api/createListing", createListingController);
-router.post("/api/queryListsings", queryListingsController);
+router.post("/api/queryListings", queryListingsController);
 
 export { router };
