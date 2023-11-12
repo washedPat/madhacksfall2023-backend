@@ -1,21 +1,13 @@
 import { Request, Response } from "express";
-import { z } from "zod";
 import { connectToDatabase } from "../../models/connect";
 import { User } from "../../models/user";
-
-const RegisterBody = z.object({
-	username: z.string(),
-	password: z.string()
-})
-
-type RegisterBody = z.infer<typeof RegisterBody>;
 
 
 async function registerController(req: Request, res: Response) {
 	try {
 		const client = await connectToDatabase(process.env.DB_CONN_STRING as string);
 
-		const body: RegisterBody = RegisterBody.parse(req.body); 
+		const body: User = User.parse(req.body); 
 
 		// check if registrant is already a user
 		
@@ -33,6 +25,7 @@ async function registerController(req: Request, res: Response) {
 			})
 		}
 
+		body.plotsRenting = [];
 		// insert user otherwise
 		await users.insertOne(body);
 		
