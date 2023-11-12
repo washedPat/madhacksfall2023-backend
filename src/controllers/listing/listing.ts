@@ -31,7 +31,14 @@ async function createListingController(req: Request, res: Response){
 
 const QueryFields = z.object({
 	maxPrice: z.number().positive(),
-	minPrice: z.number().positive()
+	city: z.string(),
+	address: z.string(),
+	distance: z.number().positive(),
+	spotType: z.union([
+        z.literal("Tight"),
+        z.literal("Normal"),
+        z.literal("Wide"),
+    ])
 });
 
 type QueryFields = z.infer<typeof QueryFields>;
@@ -48,13 +55,11 @@ async function queryListingsController(req: Request, res: Response) {
 		const cursor = listings.find({
 			"price": {
 				$lt: body.maxPrice,
-				$gt: body.minPrice
 			}
 		});
 
 		let results: Listing[] = [];
 		for await (const doc of cursor) {
-			console.log(doc);
 			results.push(doc)
 		}
 
