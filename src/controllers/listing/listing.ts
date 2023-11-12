@@ -6,6 +6,42 @@ import axios from 'axios';
 import { z } from "zod";
 
 
+async function geocodeAddress(address: string): Promise<{ lat: number; lng: number } | null> {
+    const url = 'https://maps.googleapis.com/maps/api/geocode/json';
+
+    // Parameters for the request
+    const params = {
+        address,
+        key: process.env.MAPS,
+    };
+
+    try {
+        const response = await axios.get(url, { params });
+
+        if (response.status === 200) {
+            const result = response.data;
+
+            if (result.status === 'OK') {
+                const location = result.results[0].geometry.location;
+                const lat = location.lat;
+                const lng = location.lng;
+
+                if (lat !== undefined && lng !== undefined) {
+                    return { lat, lng };
+            } else {
+                console.log(`Geocoding failed. Status: ${result.status}`);
+            }
+        } else {
+            console.log(`Request failed with status code: ${response.status}`);
+        }
+    } } catch (error) {
+        console.error('Error:');
+    }
+
+    return null;
+}
+
+
 async function getLatLng(listing: Listing): Promise<{lat: number, long: number} | null> {
 	const fullAddress = `${listing.address.street}, ${listing.address.city}, ${listing.address.state}, ${listing.address.country}, ${listing.address.zip}`;
 	const apiKey = process.env.MAPS;
@@ -100,13 +136,22 @@ async function queryListingsController(req: Request, res: Response) {
 			}
 		});
 
+		const user_addy = body.address +", " + body.city
+
+		let coords= await geocodeAddress(user_addy);
+		if (coords !== null) {
+			const cords = coords;
+
 		let results: Listing[] = [];
 		for await (const doc of cursor) {
-			results.push(doc)
+			let eucld_dist=euclideanDistance(cords.lat, cords.lng, doc.location.lat!, doc.location.long!);
+			if(eucld_dist<=body.distance && body.spotType==doc.parkingSize){
+				results.push(doc)
+			}
 		}
-
+		
 		res.status(200).json(results);
-	}catch(e) {
+	}}catch(e) {
 		console.log(e);
 		return res.status(500).json({
 			"message": "Error while querying listings"
