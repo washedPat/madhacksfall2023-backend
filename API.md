@@ -98,8 +98,8 @@ POST /api/queryListing
     "city": string,
     "address": string,
     "distance": number,
-	"startDate": string,
-	"endDate": string,
+    "startDate": string,
+    "endDate": string,
     "spotType": "Tight" | "Normal" | "Wide"
 }
 
