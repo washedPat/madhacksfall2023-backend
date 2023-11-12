@@ -7,6 +7,7 @@ const Listing = z.object({
         z.literal("Normal"),
         z.literal("Wide"),
     ]),
+    createdBy: z.string(),
     price: z.number(),
     title: z.string(),
     description: z.string().max(250),
