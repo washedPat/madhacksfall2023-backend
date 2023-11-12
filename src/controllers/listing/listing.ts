@@ -5,20 +5,26 @@ import { Listing } from "../../models/listing";
 import {v4 as uuid}  from "uuid"
 
 async function createListingController(req: Request, res: Response){
-	const client = await connectToDatabase(process.env.DB_CONN_STRING as string);
-	const database = client.db(process.env.DB_NAME);
+	try {
+		const client = await connectToDatabase(process.env.DB_CONN_STRING as string);
+		const database = client.db(process.env.DB_NAME);
 
-	const listings = database.collection<Listing>("Listings");
+		const listings = database.collection<Listing>("Listings");
 
-	const body = Listing.parse(req.body);
+		const body = Listing.parse(req.body);
 
-	body.id = uuid();
+		body.id = uuid();
 
-	await listings.insertOne(body);
+		await listings.insertOne(body);
 
-	return res.status(200).json({
-		"message": "OK"
-	})
+		return res.status(200).json({
+			"message": "OK"
+		})
+	} catch {
+		res.status(500).json({
+			"message": "Error while creating listing"
+		})
+	}
 }
 
 export { createListingController };
