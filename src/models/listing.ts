@@ -13,8 +13,8 @@ const Listing = z.object({
     startDate: z.string().datetime(),
     endDate: z.string().datetime(),
     location: z.object({
-        lat: z.number(),
-        long: z.number()
+        lat: z.number().optional(),
+        long: z.number().optional()
     }),
     address: z.object({
         street: z.string(),
