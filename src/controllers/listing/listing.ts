@@ -165,7 +165,7 @@ async function queryListingsController(req: Request, res: Response) {
 			for await (const doc of cursor) {
 				let eucld_dist = euclideanDistance(cords.lat, cords.lng, doc.location?.lat!, doc.location?.long!);
 				let time_verif= await time_check(body.startDate, body.endDate, doc.startDate, doc.endDate);
-				if (eucld_dist <= body.distance && body.spotType == doc.parkingSize && time_verif==true) {
+				if (eucld_dist <= body.distance && body.spotType == doc.parkingSize && time_verif) {
 					results.push(doc)
 				}
 			}
