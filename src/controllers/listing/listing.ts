@@ -5,6 +5,7 @@ import {v4 as uuid}  from "uuid"
 import axios from 'axios';
 import { z } from "zod";
 
+
 async function getLatLng(listing: Listing): Promise<{lat: number, long: number} | null> {
 	const fullAddress = `${listing.address.street}, ${listing.address.city}, ${listing.address.state}, ${listing.address.country}, ${listing.address.zip}`;
 	const apiKey = process.env.MAPS;
@@ -70,8 +71,12 @@ async function createListingController(req: Request, res: Response){
 }
 
 const QueryFields = z.object({
-	maxPrice: z.number().positive(),
+	maxPrice: z.number().positive(), //we have a range
 	minPrice: z.number().positive()
+	//distance: we have a range
+	//EV bool
+	//city
+	//street address
 });
 
 type QueryFields = z.infer<typeof QueryFields>;
@@ -94,6 +99,7 @@ async function queryListingsController(req: Request, res: Response) {
 
 		let results: Listing[] = [];
 		for await (const doc of cursor) {
+			
 			console.log(doc);
 			results.push(doc)
 		}
