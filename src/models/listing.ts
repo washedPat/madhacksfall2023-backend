@@ -8,6 +8,7 @@ const Listing = z.object({
         z.literal("Wide"),
     ]),
     price: z.number(),
+    title: z.string(),
     description: z.string().max(250),
     photoURL: z.string().url(),
     startDate: z.string().datetime(),

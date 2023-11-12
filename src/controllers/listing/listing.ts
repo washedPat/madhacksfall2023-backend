@@ -4,7 +4,6 @@ import { Listing } from "../../models/listing";
 import {v4 as uuid}  from "uuid"
 import { z } from "zod";
 
-
 async function createListingController(req: Request, res: Response){
 	try {
 		const client = await connectToDatabase(process.env.DB_CONN_STRING as string);
