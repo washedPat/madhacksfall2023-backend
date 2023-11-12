@@ -178,12 +178,125 @@ On Success
 On Error
 Status 400
 {
-    "message": "Could not book listing because listing could not be found"
+    "message": "Could not find listing because listing could not be found"
 }
 
 Status 500
 {
     "message": "Error could book listing due to an error",
     "error": string
+}
+```
+
+Remove Listing
+```
+POST /api/removeListing
+{
+    "listingID": string
+}
+
+On Success
+Status 200
+{
+    "message": "OK"
+}
+
+On Error
+Status 400
+{
+    "message": "Could not find listing to remove"
+}
+
+Status 500
+{
+    "message": "Error while removing listing",
+    "error": e
+}
+```
+
+# Bookings
+
+Book Listing
+```
+POST /api/bookListing
+{
+    "listingID": string,
+    "username": string
+}
+
+On Success 
+Status 200
+{
+    "message": "OK"
+}
+
+On Error
+Status 500
+{
+    "message": "Error while retrieving user bookings",
+    "error": e
+}
+```
+
+Get User Bookings
+```
+GET /api/getUserBookings?username={username}
+
+On Success
+Status 200
+[
+    {
+        "id": "655012f083df1e20ec650a02",
+        "parkingSize": "Normal",
+        "price": 5,
+        "description": "a nice parking spot",
+        "photoURL": "https://api.time.com/wp-content/uploads/2019/10/gettyimages-911240358.jpg",
+        "startDate": "2023-11-11T23:32:57.718Z",
+        "endDate": "2023-11-11T23:32:57.718Z",
+        "location": {
+            "lat": 43.073929,
+            "long": -89.385239
+        },
+        "address": {
+            "street": "1001 University Ave.",
+            "city": "Madison",
+            "state": "WI",
+            "country": "USA",
+            "zip": 53715
+        }
+    },
+]
+
+On Error
+Status 500
+{
+    "message": "Error while retrieving user bookings",
+    "error": e
+}
+```
+
+Remove Booking
+```
+POST /api/removeBooking
+{
+    "bookingID": string
+}
+
+On Success
+Status 200
+{
+    "message": "OK"
+}
+
+On Error
+Status 400
+{
+    "message": "Could not remove booking because booking could not be found"
+}
+
+Status 500
+{
+			"message": "Error while removing a users booking"
+            "error": e
 }
 ```
