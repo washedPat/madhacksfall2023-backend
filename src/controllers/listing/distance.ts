@@ -28,6 +28,8 @@ function euclideanDistance(lat1: number, lon1: number, lat2: number, lon2: numbe
     return distanceInMiles;
 }
 
+
+export { euclideanDistance };
 // const distance = euclideanDistance(37.7749, -122.4194, 34.0522, -118.2437);
 // console.log(`Distance: ${distance.toFixed(2)} miles`);
 

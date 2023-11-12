@@ -17,6 +17,7 @@ const Listing = z.object({
         lat: z.number().optional(),
         long: z.number().optional()
     }).optional(),
+    booked: z.boolean().optional(),
     address: z.object({
         street: z.string(),
         city: z.string(),
